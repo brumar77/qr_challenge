@@ -12,7 +12,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-# Funciones para hashing y verificación de contraseñas
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 

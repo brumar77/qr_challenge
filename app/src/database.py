@@ -1,20 +1,21 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://user_qr:user_qr_password@localhost:5433/qr_management"
+
+load_dotenv()
+
+if os.getenv("ENVIRONMENT") == "test":
+    DATABASE_URL = os.getenv("DATABASE_URL_TEST")  # Base de datos para pruebas
+else:
+    DATABASE_URL = os.getenv("DATABASE_URL")  # Base de datos para producción
 
 engine = create_engine(DATABASE_URL)
-
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
-
 
 def get_db():
     session = SessionLocal()
@@ -24,16 +25,11 @@ def get_db():
     finally:
         session.close()
 
-
-
-# Gestión de tablas
 def create_all_tables():
-    from models.users import User
-    from models.qr_codes import QrCodes
-    from models.scans import Scans
+    from app.src.models.users import User
+    from app.src.models.qr_codes import QrCodes
+    from app.src.models.scans import Scans
 
+    # Crear tablas en la base de datos
     Base.metadata.create_all(bind=engine)
     print("Todas las tablas creadas exitosamente.")
-
-create_all_tables()
-

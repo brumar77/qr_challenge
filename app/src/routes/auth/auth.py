@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models.users import User
-from models.qr_codes import QrCodes
-from models.scans import Scans
+from app.src.database import get_db
+from app.src.models.users import User
+from app.src.models.qr_codes import QrCodes
+from app.src.models.scans import Scans
 
-from schemas.auth.auth import Token, UserLogin, UserOut, UserRegistry
+from app.src.schemas.auth.auth import Token, UserLogin, UserOut, UserRegistry
 
 
-from utils.auth import create_access_token, hash_password, verify_password
+from app.src.utils.auth import create_access_token, hash_password, verify_password
 
 
 auth_routes = APIRouter(
@@ -17,7 +17,10 @@ auth_routes = APIRouter(
     tags=["auth"],
 )
 
-@auth_routes.post("/register/", status_code=status.HTTP_201_CREATED, response_model=UserOut)
+@auth_routes.post("/register/", 
+                  status_code=status.HTTP_201_CREATED, 
+                  response_model=UserOut,
+)
 async def registrar_usuario(user: UserRegistry, db: Session = Depends(get_db)):
     
     existing_user = db.query(User).filter(User.email == user.email).first()
@@ -36,8 +39,6 @@ async def registrar_usuario(user: UserRegistry, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     
-    print(new_user)
-
     user_out = UserOut(
         id=str(new_user.id),
         name=new_user.name,
@@ -48,6 +49,8 @@ async def registrar_usuario(user: UserRegistry, db: Session = Depends(get_db)):
 
     return user_out
 
+#####################################################################################
+
 @auth_routes.post("/login/", response_model=Token)
 async def iniciar_sesion(
     body: UserLogin, 
@@ -57,17 +60,26 @@ async def iniciar_sesion(
     # Buscar al usuario en la base de datos
     usuario = db.query(User).filter(User.email == body.email).first()
 
-    # Validar credenciales
-    if not usuario or not verify_password(body.password, usuario.hashed_password):
+    # if not usuario or not verify_password(body.password, usuario.hashed_password):
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED,
+    #         detail="Credenciales incorrectas",
+    #     )
+    
+    if not usuario:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales incorrectas",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
         )
     
-    # Crear el token de acceso
+    if not verify_password(body.password, usuario.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+        )
+    
     access_token = create_access_token({"sub": usuario.email, "rol": usuario.rol})
 
-    # Guardar el token en una cookie
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",

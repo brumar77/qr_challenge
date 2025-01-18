@@ -5,16 +5,16 @@ from fastapi.responses import FileResponse, JSONResponse
 
 from sqlalchemy.orm import Session
 
-from models.users import User
-from models.qr_codes import QrCodes
-from models.scans import Scans
+from app.src.models.users import User
+from app.src.models.qr_codes import QrCodes
+from app.src.models.scans import Scans
 
-from database import get_db
+from app.src.database import get_db
 
-from middleware.security import get_current_user, verificar_rol
+from app.src.middleware.security import get_current_user, verificar_rol
 
-from schemas.qr.qr import QRCodeCreate, QRCodeUpdate, QrCodeOut, ResponseQrCodeOut
-from utils.qr import generate_qr_code
+from app.src.schemas.qr.qr import QRCodeCreate, QRCodeUpdate, QrCodeOut, ResponseQrCodeOut
+from app.src.utils.qr import generate_qr_code
 
 
 user_routes = APIRouter(

@@ -1,12 +1,13 @@
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 
-from routes.auth.auth import auth_routes
-from routes.user.user import user_routes
-from routes.user.scan import scan_routes
-from routes.user.statistic import statistic_routes
+from app.src.database import create_all_tables
+from app.src.routes.auth.auth import auth_routes
+from app.src.routes.user.user import user_routes
+from app.src.routes.user.scan import scan_routes
+from app.src.routes.user.statistic import statistic_routes
 
-from config import APP_TITLE, APP_DESCRIPTION, APP_VERSION
+from app.src.config import APP_TITLE, APP_DESCRIPTION, APP_VERSION
 
 
 app = FastAPI(
@@ -22,6 +23,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+create_all_tables()
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

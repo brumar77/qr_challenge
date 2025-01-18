@@ -5,12 +5,12 @@ from fastapi.responses import RedirectResponse
 
 from sqlalchemy.orm import Session
 
-from database import get_db
-from middleware.security import get_current_user
-from models.qr_codes import QrCodes
-from models.scans import Scans
-from schemas.qr.qr import QRMetricsResponse, ScanDetail
-from utils.scan import get_country_from_ip
+from app.src.database import get_db
+from app.src.middleware.security import get_current_user
+from app.src.models.qr_codes import QrCodes
+from app.src.models.scans import Scans
+from app.src.schemas.qr.qr import QRMetricsResponse, ScanDetail
+from app.src.utils.scan import get_country_from_ip
 
 
 scan_routes = APIRouter(

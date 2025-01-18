@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 
-from utils.auth import decode_token
+from app.src.utils.auth import decode_token
 
 
 def get_current_user(request: Request):
