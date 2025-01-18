@@ -31,3 +31,6 @@ venv/
 .vscode/
 
 **/.DS_Store
+
+# Ignorar archivos QR generados
+static/qr_codes/*.png
