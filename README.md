@@ -26,12 +26,12 @@ Antes de comenzar, asegúrate de tener instalados los siguientes programas:
       pip install -r requirements.txt
       ```
 
-1. Levanta el entorno Docker con Docker Compose:
+2. Levanta el entorno Docker con Docker Compose:
 
    ```bash
    docker compose up -d --build
    ```
-2. Ubicate en el path correcto (...src/).
+3. Ubicate en el path correcto.
 Levanta el servicio FastAPI con:
 
    ```bash
@@ -39,3 +39,17 @@ Levanta el servicio FastAPI con:
    ```
 
 3. Accede a la app en [http://localhost:8000/docs](http://localhost:8000/docs)
+
+
+## Instrucciones para ejecutar los test
+1. Desde la raiz, ejecutar:
+
+   ```bash
+   pytest
+   ```
+   o si necesitas mas detalles:
+
+   ```bash
+   pytest -rP
+   ```
+

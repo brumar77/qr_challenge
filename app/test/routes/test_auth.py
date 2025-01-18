@@ -1,11 +1,10 @@
 from uuid import UUID
 import pytest
 
-from app.test.config import client
 from fastapi.testclient import TestClient
 from app.src.main import app
 
-client = TestClient(app)
+# client = TestClient(app)
 
 
 ##############################################################################################################
@@ -73,8 +72,8 @@ def is_valid_uuid(value: str) -> bool:
         422,
     ),
 ])
-def test_registrar_usuario(new_user: dict, code_response: int):
-    response = client.post(url="/auth/register/", json=new_user)
+def test_registrar_usuario(new_user: dict, code_response: int, test_client):
+    response = test_client.post(url="/auth/register/", json=new_user)
 
     # Validar tipo de contenido
     assert response.headers["Content-Type"] == "application/json"
@@ -93,11 +92,11 @@ def test_registrar_usuario(new_user: dict, code_response: int):
 
 
 ##############################################################################################################
-def test_iniciar_sesion_exitoso(test_user):
+def test_iniciar_sesion_exitoso(test_user, test_client):
     """Test para iniciar sesión exitosamente."""
-    body = {"email": "test@gmail.com", "password": test_user["plain_password"]}
+    body = {"email": test_user["user_email"], "password": test_user["plain_password"]}
 
-    response = client.post("/auth/login/", json=body)
+    response = test_client.post("/auth/login/", json=body)
     
     print(response.json())
     
@@ -112,20 +111,20 @@ def test_iniciar_sesion_exitoso(test_user):
     assert response.cookies.get("access_token") is not None
 
 
-def test_iniciar_sesion_fallo_credenciales_invalidas():
+def test_iniciar_sesion_fallo_credenciales_invalidas( test_user ,test_client ):
     """Test para credenciales inválidas."""
-    body = {"email":"test@gmail.com" , "password": "wrongpassword"}
+    body = {"email":test_user["user_email"] , "password": "wrongpassword"}
 
-    response = client.post("/auth/login/", json=body)
+    response = test_client.post("/auth/login/", json=body)
     print(response.json())
     assert response.status_code == 401
     assert response.json() == {"detail": "Incorrect password"}
 
-def test_iniciar_sesion_fallo_usuario_no_existente():
+def test_iniciar_sesion_fallo_usuario_no_existente( test_client ):
     """Test para un usuario inexistente."""
     body = {"email": "nonexistent@example.com", "password": "password123"}
 
-    response = client.post("/auth/login/", json=body)
+    response = test_client.post("/auth/login/", json=body)
     print(response.json())
     assert response.status_code == 404
     assert response.json() == {"detail": "User not found"}

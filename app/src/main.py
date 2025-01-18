@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 
@@ -24,8 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-create_all_tables()
-
+if os.getenv("ENVIRONMENT") != "test":
+    create_all_tables() 
+    
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     print(f"Solicitud entrante: {request.method} {request.url}")

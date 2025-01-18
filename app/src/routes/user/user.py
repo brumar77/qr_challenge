@@ -30,9 +30,13 @@ async def create_qr_code(data: QRCodeCreate,db: Session = Depends(get_db)):
     # Verificar si el usuario existe
     user = db.query(User).filter(User.id == data.user_id).first()
     if not user:
-        raise {"error": f"User with {data.user_id} not found"}  
+        raise HTTPException(status_code=404, detail="User not found")
+        # raise {"error": f"User with {data.user_id} not found"}  
         
     file_path = generate_qr_code(data.url, data.color, data.size)
+    
+    if not file_path:
+        raise HTTPException(status_code=500, detail="Error generating QR code")
     
     qr_code = QrCodes(
         url=data.url,
