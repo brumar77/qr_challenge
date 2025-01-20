@@ -1,8 +1,8 @@
 import os
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import Depends, FastAPI, Request
+from alembic.config import Config
+from alembic import command
 from starlette.middleware.cors import CORSMiddleware
-from sqlalchemy.exc import SQLAlchemyError
 
 from app.src.database import create_all_tables
 from app.src.routes.auth.auth import auth_routes
@@ -32,6 +32,10 @@ app.add_middleware(
 
 if os.getenv("ENVIRONMENT") != "test":
     create_all_tables() 
+    
+
+alembic_cfg = Config("alembic.ini")
+command.upgrade(alembic_cfg, "head")
     
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
