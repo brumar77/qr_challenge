@@ -7,10 +7,11 @@ Esta es una aplicación para escanear códigos QR, construida con FastAPI. La ap
 Antes de comenzar, asegúrate de tener instalados los siguientes programas:
 
 - [Docker](https://www.docker.com/) (incluye Docker Compose)
+- [Python](https://www.python.org/)
   
 ## Instrucciones para ejecutar la aplicación
 
-1. Crea un entorno virtual en Python:
+1. Crea un entorno virtual en Python, desde la raiz del proyecto:
 
    ```bash
    python3 -m venv venv
@@ -26,7 +27,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes programas:
       pip install -r requirements.txt
       ```
 
-2. Levanta el entorno Docker con Docker Compose:
+2. Levanta el entorno Docker con Docker Compose, desde la raiz del proyecto:
 
    ```bash
    docker compose up -d --build
@@ -41,8 +42,8 @@ Levanta el servicio FastAPI con:
 3. Accede a la app en [http://localhost:8000/docs](http://localhost:8000/docs)
 
 
-## Instrucciones para ejecutar los test
-1. Desde la raiz, ejecutar:
+## Instrucciones para ejecutar los test de pytest
+1. Desde la raiz, ejecutar por consola:
 
    ```bash
    pytest
@@ -50,6 +51,6 @@ Levanta el servicio FastAPI con:
    o si necesitas mas detalles:
 
    ```bash
-   pytest -rP
+   pytest -v
    ```
 

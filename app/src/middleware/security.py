@@ -8,6 +8,14 @@ def get_current_user(request: Request):
     """
     Obtiene al usuario actual a partir del token en las cabeceras o en las cookies.
     """
+    # Lista de rutas públicas que no requieren autenticación
+    public_paths = ["/auth/register/", "/auth/login/", "/docs", "/openapi.json"]
+    
+    # Si la ruta actual está en la lista de rutas públicas, permitir el acceso
+    if request.url.path in public_paths:
+        return None
+    
+    
     # Intentar obtener el token desde la cabecera
     token = request.headers.get("Authorization")
     if token and token.startswith("Bearer "):

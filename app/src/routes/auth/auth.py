@@ -10,9 +10,9 @@ from app.src.schemas.auth.auth import Token, UserLogin, UserOut, UserRegistry
 
 
 from app.src.utils.auth import create_access_token, hash_password, verify_password
+from app.src.utils.routes.public_routes import create_public_router
 
-
-auth_routes = APIRouter(
+auth_routes = create_public_router(
     prefix="/auth",
     tags=["auth"],
 )
@@ -57,14 +57,8 @@ async def iniciar_sesion(
     response: Response,
     db: Session = Depends(get_db)):
     
-    # Buscar al usuario en la base de datos
     usuario = db.query(User).filter(User.email == body.email).first()
 
-    # if not usuario or not verify_password(body.password, usuario.hashed_password):
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Credenciales incorrectas",
-    #     )
     
     if not usuario:
         raise HTTPException(
@@ -83,10 +77,10 @@ async def iniciar_sesion(
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",
-        httponly=True,  # Solo accesible por el servidor
-        max_age=3600,  #  1 hora
-        secure=False,  # Configurar en True en HTTPS
-        samesite="lax",  # Cambiar a "strict" para prod
+        httponly=True, 
+        max_age=3600,  
+        secure=False,  
+        samesite="lax",  
     )
 
     return Token(

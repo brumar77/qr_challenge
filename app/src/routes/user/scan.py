@@ -16,7 +16,6 @@ from app.src.utils.scan import get_country_from_ip
 scan_routes = APIRouter(
     prefix="/scan",
     tags=["Scan"],
-    dependencies=[Depends(get_current_user)],
 )
 
 ############################################################################################################

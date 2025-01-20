@@ -13,7 +13,6 @@ from app.src.schemas.qr.qr import QRMetricsResponse, ScanDetail
 statistic_routes = APIRouter(
     prefix="/statistic",
     tags=["Statistic"],
-    dependencies=[Depends(get_current_user)],
 )
 
 ############################################################################################################

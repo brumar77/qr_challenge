@@ -20,7 +20,6 @@ from app.src.utils.qr import generate_qr_code
 user_routes = APIRouter(
     prefix="/user",
     tags=["User"],
-    dependencies=[Depends(get_current_user)],
 )
 
 

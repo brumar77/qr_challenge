@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, Depends, FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 
 from app.src.database import create_all_tables
@@ -9,12 +9,14 @@ from app.src.routes.user.scan import scan_routes
 from app.src.routes.user.statistic import statistic_routes
 
 from app.src.config import APP_TITLE, APP_DESCRIPTION, APP_VERSION
+from app.src.middleware.security import get_current_user
 
 
 app = FastAPI(
     title=APP_TITLE,
     description=APP_DESCRIPTION,
     version=APP_VERSION,
+    dependencies=[Depends(get_current_user)] #default rutas privadas
 )
 
 app.add_middleware(
