@@ -62,13 +62,13 @@ async def iniciar_sesion(
     
     if not usuario:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=404,
             detail="User not found",
         )
     
     if not verify_password(body.password, usuario.hashed_password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Incorrect password",
         )
     

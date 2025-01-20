@@ -1,6 +1,8 @@
 import os
-from fastapi import APIRouter, Depends, FastAPI, Request
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.src.database import create_all_tables
 from app.src.routes.auth.auth import auth_routes
@@ -10,6 +12,7 @@ from app.src.routes.user.statistic import statistic_routes
 
 from app.src.config import APP_TITLE, APP_DESCRIPTION, APP_VERSION
 from app.src.middleware.security import get_current_user
+from app.src.exceptions.error_handlers import add_error_handlers
 
 
 app = FastAPI(
@@ -39,6 +42,7 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     return response
 
+add_error_handlers(app)
 
 app.include_router(auth_routes)
 app.include_router(user_routes) 

@@ -20,7 +20,7 @@ scan_routes = APIRouter(
 
 ############################################################################################################
 
-@scan_routes.get("/qr-codes/scan/{qr_id}",summary="Scan QR Code")
+@scan_routes.get("/qr-codes/scan/{qr_id}",summary="Scan QR Code - Use Postman")
 def scan_qr_code(qr_id: str, request: Request, db: Session = Depends(get_db)):
     
     qr_code = db.query(QrCodes).filter(QrCodes.id == qr_id).first()
