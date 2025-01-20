@@ -31,16 +31,14 @@ def setup_test_database():
     """
     Configuración inicial de la base de datos de prueba.
     """
-    # Importar todos los modelos para asegurarse de que estén registrados
     from app.src.models import users , qr_codes, scans 
     
-    # Crear todas las tablas
-    Base.metadata.drop_all(bind=engine)  # Eliminar tablas existentes
-    Base.metadata.create_all(bind=engine)  # Crear tablas nuevas
+    Base.metadata.drop_all(bind=engine)  
+    Base.metadata.create_all(bind=engine)
     
     yield
     
-    # Limpiar
+    
     test_session.close()
     engine.dispose()
     
@@ -59,7 +57,6 @@ def test_db():
     try:
         yield test_session
     finally:
-        # Hacer rollback en lugar de commit para no afectar otras pruebas
         test_session.rollback()
 
 @pytest.fixture
